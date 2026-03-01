@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Playfair Display ── */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/PlayfairDisplay-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/PlayfairDisplay-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/PlayfairDisplay-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/PlayfairDisplay-700.woff2') format('woff2');
+}
+
+/* ── Inter ── */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/assets/fonts/Inter-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/Inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/Inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/Inter-600.woff2') format('woff2');
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* ── Brand palette (OKLCH raw L C H) ── */
+    --teal:           0.60 0.12 185;
+    --teal-dark:      0.50 0.13 185;
+    --gold:           0.65 0.12 85;
+    --gold-light:     0.88 0.07 85;
+    --charcoal:       0.18 0.01 260;
+    --cream:          0.97 0.01 80;
+    --warm-white:     0.99 0 0;
+    --muted-warm:     0.94 0.01 80;
+    --border-soft:    0.92 0.01 80;
+    --text-secondary: 0.55 0.01 260;
+
+    /* ── shadcn semantic tokens ── */
+    --background:           var(--warm-white);
+    --foreground:           var(--charcoal);
+    --card:                 1 0 0;
+    --card-foreground:      var(--charcoal);
+    --popover:              1 0 0;
+    --popover-foreground:   var(--charcoal);
+    --primary:              var(--teal);
+    --primary-foreground:   1 0 0;
+    --secondary:            var(--cream);
+    --secondary-foreground: var(--charcoal);
+    --muted:                var(--muted-warm);
+    --muted-foreground:     var(--text-secondary);
+    --accent:               var(--gold-light);
+    --accent-foreground:    var(--charcoal);
+    --destructive:          0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border:               var(--border-soft);
+    --input:                var(--border-soft);
+    --ring:                 var(--teal);
+
+    /* Chart */
+    --chart-1: 0.60 0.12 185;
+    --chart-2: 0.65 0.12 85;
+    --chart-3: 0.75 0.10 145;
+    --chart-4: 0.80 0.10 55;
+    --chart-5: 0.70 0.08 300;
+
+    /* Sidebar */
+    --sidebar:                    var(--cream);
+    --sidebar-foreground:         var(--charcoal);
+    --sidebar-primary:            var(--teal);
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent:             var(--muted-warm);
+    --sidebar-accent-foreground:  var(--charcoal);
+    --sidebar-border:             var(--border-soft);
+    --sidebar-ring:               var(--teal);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* ── Heritage ethnic border pattern ── */
+.ethnic-border {
+  position: relative;
+}
+.ethnic-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid oklch(0.85 0.04 85);
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 6px, oklch(0.90 0.03 85) 6px, oklch(0.90 0.03 85) 7px),
+    repeating-linear-gradient(90deg, transparent, transparent 6px, oklch(0.90 0.03 85) 6px, oklch(0.90 0.03 85) 7px);
+  background-size: 7px 7px;
+  opacity: 0.35;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+/* ── Gold scan animation ── */
+@keyframes scan-gold {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+.scan-line {
+  animation: scan-gold 2s ease-in-out;
+}
+
+/* ── Luxury card hover ── */
+.luxury-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.luxury-card:hover {
+  box-shadow: 0 16px 48px -12px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+/* ── Map hotspot pulse ── */
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.map-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: oklch(0.60 0.12 185 / 0.4);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* ── Frame gallery style ── */
+.gallery-frame {
+  padding: 16px;
+  background: white;
+  box-shadow: 
+    0 0 0 1px oklch(0.78 0.01 260),
+    0 4px 24px -4px rgba(0,0,0,0.10),
+    inset 0 0 0 6px oklch(0.97 0.01 80);
+}
+
+/* ── Serif display font utility ── */
+.font-display {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+}
+
+/* ── Thin rule ── */
+.rule-teal {
+  width: 40px;
+  height: 2px;
+  background: oklch(0.60 0.12 185);
+  display: inline-block;
+}
