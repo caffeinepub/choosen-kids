@@ -11,7 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Clock, Gavel, Heart, Package, TrendingUp, Users } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Gavel,
+  Heart,
+  Package,
+  Shield,
+  TrendingUp,
+  Users,
+  Zap,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -178,10 +188,17 @@ interface BidDialogProps {
 function BidDialog({ item, open, onClose }: BidDialogProps) {
   const [bidAmount, setBidAmount] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   if (!item) return null;
 
   const minBid = item.currentBid + 100;
+  const quickBids = [
+    minBid,
+    item.currentBid + 500,
+    item.currentBid + 1000,
+    item.currentBid + 2500,
+  ];
 
   const handleSubmit = () => {
     const amount = Number(bidAmount.replace(/,/g, ""));
@@ -196,98 +213,205 @@ function BidDialog({ item, open, onClose }: BidDialogProps) {
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      setBidAmount("");
-      onClose();
-      toast.success(`Bid of ${formatBid(amount)} placed successfully!`);
-    }, 800);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setBidAmount("");
+        onClose();
+        toast.success(`Bid of ${formatBid(amount)} placed successfully!`);
+      }, 1200);
+    }, 900);
+  };
+
+  const handleClose = () => {
+    setBidAmount("");
+    setIsSuccess(false);
+    onClose();
   };
 
   return (
     <Dialog
       open={open}
       onOpenChange={(v) => {
-        if (!v) {
-          setBidAmount("");
-          onClose();
-        }
+        if (!v) handleClose();
       }}
     >
-      <DialogContent className="sm:max-w-md bg-white border border-gray-100">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl text-charcoal leading-tight">
-            {item.title}
-          </DialogTitle>
-          <p className="text-xs text-charcoal/50 tracking-widest uppercase mt-1">
-            {item.region} · {item.category}
-          </p>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-lg bg-white border border-gray-100 p-0 overflow-hidden rounded-2xl">
+        {/* Top image strip */}
+        <div className="relative h-36 overflow-hidden">
+          <img
+            src={item.image}
+            alt={item.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60" />
+          <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-white/70 font-medium">
+              {item.region} · {item.category}
+            </p>
+            <h2 className="font-display text-lg font-semibold text-white leading-tight mt-0.5">
+              {item.title}
+            </h2>
+          </div>
+          {/* Time left chip */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm">
+            <Clock className="w-3 h-3 text-charcoal/60" />
+            <span className="text-xs font-medium text-charcoal/70">
+              {item.timeLeft}
+            </span>
+          </div>
+        </div>
 
-        <div className="space-y-5 py-2">
-          {/* Current bid display */}
-          <div className="bg-teal-light/40 rounded-xl px-5 py-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs text-charcoal/50 tracking-widest uppercase">
-                Current Bid
+        <div className="px-6 pt-5 pb-6 space-y-5">
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-3">
+            <div
+              className="rounded-xl px-4 py-3 text-center"
+              style={{ background: "oklch(0.96 0.03 185)" }}
+            >
+              <p className="text-[10px] tracking-widest uppercase text-charcoal/45 font-medium">
+                Current
               </p>
               <p
-                className="font-display text-2xl font-semibold mt-0.5"
-                style={{ color: "oklch(0.60 0.12 185)" }}
+                className="font-display text-xl font-bold mt-0.5"
+                style={{ color: "oklch(0.50 0.14 185)" }}
               >
                 {formatBid(item.currentBid)}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-xs text-charcoal/50 tracking-widest uppercase">
+            <div className="rounded-xl px-4 py-3 text-center bg-gray-50">
+              <p className="text-[10px] tracking-widest uppercase text-charcoal/45 font-medium">
                 Bids
               </p>
-              <p className="text-xl font-semibold text-charcoal/70 mt-0.5">
-                {item.bidCount}
+              <div className="flex items-center justify-center gap-1 mt-0.5">
+                <Users className="w-3.5 h-3.5 text-charcoal/50" />
+                <p className="font-display text-xl font-bold text-charcoal/70">
+                  {item.bidCount}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl px-4 py-3 text-center bg-gray-50">
+              <p className="text-[10px] tracking-widest uppercase text-charcoal/45 font-medium">
+                Minimum
+              </p>
+              <p className="font-display text-xl font-bold text-charcoal/70 mt-0.5">
+                {formatBid(minBid)}
               </p>
             </div>
           </div>
 
-          {/* Input */}
+          {/* Quick bid buttons */}
+          <div>
+            <p className="text-[10px] tracking-widest uppercase text-charcoal/45 font-medium mb-2">
+              Quick Bid
+            </p>
+            <div className="grid grid-cols-4 gap-2">
+              {quickBids.map((amount) => (
+                <button
+                  key={amount}
+                  type="button"
+                  onClick={() => setBidAmount(String(amount))}
+                  className={`rounded-lg py-2 px-1 text-xs font-semibold border transition-all duration-150 ${
+                    bidAmount === String(amount)
+                      ? "border-transparent text-white"
+                      : "border-gray-200 text-charcoal/60 bg-white hover:border-teal/40 hover:text-charcoal"
+                  }`}
+                  style={
+                    bidAmount === String(amount)
+                      ? { background: "oklch(0.60 0.12 185)" }
+                      : {}
+                  }
+                >
+                  {formatBid(amount)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom bid input */}
           <div className="space-y-2">
             <Label
               htmlFor="bid-input"
-              className="text-xs text-charcoal/60 tracking-widest uppercase"
+              className="text-[10px] text-charcoal/50 tracking-widest uppercase font-medium"
             >
-              Your Bid (₹)
+              Or Enter Custom Bid (₹)
             </Label>
-            <Input
-              id="bid-input"
-              type="number"
-              placeholder={`Min. ${formatBid(minBid)}`}
-              value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
-              className="border-gray-200 focus-visible:ring-teal text-charcoal placeholder:text-charcoal/30"
-            />
-            <p className="text-xs text-charcoal/40">
-              Minimum bid: {formatBid(minBid)} (₹100 above current)
-            </p>
+            <div className="relative">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal/40 font-medium text-sm">
+                ₹
+              </span>
+              <Input
+                id="bid-input"
+                type="number"
+                placeholder={`e.g. ${(item.currentBid + 1500).toLocaleString("en-IN")}`}
+                value={bidAmount}
+                onChange={(e) => setBidAmount(e.target.value)}
+                className="pl-8 border-gray-200 focus-visible:ring-1 focus-visible:ring-teal/40 text-charcoal placeholder:text-charcoal/25 rounded-lg h-11"
+              />
+            </div>
+          </div>
+
+          {/* Trust badges */}
+          <div className="flex items-center gap-4 py-3 border-y border-gray-100">
+            <div className="flex items-center gap-1.5 text-charcoal/45">
+              <Shield className="w-3.5 h-3.5" />
+              <span className="text-xs">Secure Bidding</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-charcoal/45">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span className="text-xs">Verified Artwork</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-charcoal/45">
+              <Zap className="w-3.5 h-3.5" />
+              <span className="text-xs">Instant Confirmation</span>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={handleClose}
+              className="flex-1 border-gray-200 text-charcoal/55 hover:text-charcoal hover:bg-gray-50 rounded-xl h-11"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting || isSuccess}
+              className="flex-[2] text-white font-semibold rounded-xl h-11 transition-all duration-200"
+              style={{
+                background: isSuccess
+                  ? "oklch(0.55 0.15 145)"
+                  : "oklch(0.60 0.12 185)",
+              }}
+            >
+              {isSuccess ? (
+                <span className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Bid Placed!
+                </span>
+              ) : isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Placing bid…
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <Gavel className="w-4 h-4" />
+                  Place Bid
+                  {bidAmount &&
+                    !Number.isNaN(Number(bidAmount)) &&
+                    Number(bidAmount) >= minBid && (
+                      <span className="opacity-80">
+                        · {formatBid(Number(bidAmount))}
+                      </span>
+                    )}
+                </span>
+              )}
+            </Button>
           </div>
         </div>
-
-        <DialogFooter className="gap-3 flex-col sm:flex-row">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setBidAmount("");
-              onClose();
-            }}
-            className="border-gray-200 text-charcoal/60 hover:text-charcoal hover:bg-gray-50"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="text-white font-medium hover:opacity-90 transition-opacity"
-            style={{ background: "oklch(0.60 0.12 185)" }}
-          >
-            {isSubmitting ? "Placing bid…" : "Submit Bid"}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -354,36 +478,52 @@ function AuctionCard({ item, index, onBid }: AuctionCardProps) {
           <Separator className="my-4 bg-gray-50" />
 
           {/* Bid info row */}
-          <div className="flex items-end justify-between mb-4">
+          <div
+            className="rounded-xl px-4 py-3 mb-4 flex items-center justify-between"
+            style={{ background: "oklch(0.97 0.02 185)" }}
+          >
             <div>
-              <p className="text-[10px] tracking-widest uppercase text-charcoal/40">
+              <p className="text-[10px] tracking-widest uppercase text-charcoal/40 font-medium">
                 Current Bid
               </p>
               <p
-                className="font-display text-xl font-semibold mt-0.5"
-                style={{ color: "oklch(0.60 0.12 185)" }}
+                className="font-display text-2xl font-bold mt-0.5"
+                style={{ color: "oklch(0.50 0.14 185)" }}
               >
                 {formatBid(item.currentBid)}
               </p>
             </div>
-            <div className="text-right">
-              <div className="flex items-center gap-1 text-charcoal/40 justify-end">
+            <div className="text-right space-y-1">
+              <div className="flex items-center gap-1.5 text-charcoal/45 justify-end">
                 <TrendingUp className="w-3 h-3" />
-                <span className="text-xs">{item.bidCount} bids</span>
+                <span className="text-xs font-medium">
+                  {item.bidCount} bids
+                </span>
               </div>
-              <div className="flex items-center gap-1 text-charcoal/40 justify-end mt-1">
-                <Clock className="w-3 h-3" />
-                <span className="text-xs">{item.timeLeft}</span>
+              <div className="flex items-center gap-1.5 justify-end">
+                <Clock
+                  className={`w-3 h-3 ${isEndingToday ? "" : "text-charcoal/40"}`}
+                  style={
+                    isEndingToday ? { color: "oklch(0.58 0.20 27)" } : undefined
+                  }
+                />
+                <span
+                  className={`text-xs font-medium ${isEndingToday ? "font-semibold" : "text-charcoal/45"}`}
+                  style={isEndingToday ? { color: "oklch(0.58 0.20 27)" } : {}}
+                >
+                  {item.timeLeft}
+                </span>
               </div>
             </div>
           </div>
 
           {/* CTA */}
           <Button
-            className="w-full text-white font-medium text-sm hover:opacity-90 transition-opacity"
+            className="w-full text-white font-semibold text-sm hover:opacity-90 transition-all duration-200 rounded-xl h-10 gap-2"
             style={{ background: "oklch(0.60 0.12 185)" }}
             onClick={() => onBid(item)}
           >
+            <Gavel className="w-4 h-4" />
             Place Bid
           </Button>
         </CardContent>

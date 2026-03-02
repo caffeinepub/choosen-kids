@@ -125,83 +125,89 @@ export default function HeritagePage() {
               />
               {/* Overlay hotspots */}
               <div className="absolute inset-0">
-                {/* Nilgiris */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect("nilgiris")}
-                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "nilgiris" ? "scale-125" : ""}`}
-                  style={{
-                    bottom: "22%",
-                    left: "30%",
-                    background: "oklch(0.60 0.12 185)",
-                    boxShadow: "0 0 0 4px oklch(0.60 0.12 185 / 0.2)",
-                  }}
-                  title="Nilgiris – Toda Embroidery"
-                />
-                {/* Mithila */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect("mithila")}
-                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "mithila" ? "scale-125" : ""}`}
-                  style={{
-                    top: "32%",
-                    left: "55%",
-                    background: "oklch(0.65 0.12 85)",
-                    boxShadow: "0 0 0 4px oklch(0.65 0.12 85 / 0.2)",
-                  }}
-                  title="Mithila – Madhubani"
-                />
-                {/* Rajasthan */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect("rajasthan")}
-                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "rajasthan" ? "scale-125" : ""}`}
-                  style={{
-                    top: "38%",
-                    left: "25%",
-                    background: "oklch(0.60 0.15 50)",
-                    boxShadow: "0 0 0 4px oklch(0.60 0.15 50 / 0.2)",
-                  }}
-                  title="Rajasthan – Block Print"
-                />
-                {/* Bengal */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect("bengal")}
-                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "bengal" ? "scale-125" : ""}`}
-                  style={{
-                    top: "36%",
-                    left: "65%",
-                    background: "oklch(0.55 0.15 145)",
-                    boxShadow: "0 0 0 4px oklch(0.55 0.15 145 / 0.2)",
-                  }}
-                  title="Bengal – Kantha"
-                />
-                {/* Kerala */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect("kerala")}
-                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "kerala" ? "scale-125" : ""}`}
-                  style={{
-                    bottom: "15%",
-                    left: "26%",
-                    background: "oklch(0.62 0.14 165)",
-                    boxShadow: "0 0 0 4px oklch(0.62 0.14 165 / 0.2)",
-                  }}
-                  title="Kerala – Kasavu"
-                />
-                {/* Kashmir */}
+                {/* Kashmir – top-left bump of India, upper region */}
                 <button
                   type="button"
                   onClick={() => handleSelect("kashmir")}
                   className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "kashmir" ? "scale-125" : ""}`}
                   style={{
-                    top: "10%",
-                    left: "30%",
+                    top: "17%",
+                    left: "34%",
                     background: "oklch(0.58 0.12 280)",
                     boxShadow: "0 0 0 4px oklch(0.58 0.12 280 / 0.2)",
+                    transform: "translate(-50%, -50%)",
                   }}
                   title="Kashmir – Pashmina"
+                />
+                {/* Rajasthan – left-center of India */}
+                <button
+                  type="button"
+                  onClick={() => handleSelect("rajasthan")}
+                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "rajasthan" ? "scale-125" : ""}`}
+                  style={{
+                    top: "41%",
+                    left: "30%",
+                    background: "oklch(0.60 0.15 50)",
+                    boxShadow: "0 0 0 4px oklch(0.60 0.15 50 / 0.2)",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  title="Rajasthan – Block Print"
+                />
+                {/* Mithila – center, slightly right (Bihar region) */}
+                <button
+                  type="button"
+                  onClick={() => handleSelect("mithila")}
+                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "mithila" ? "scale-125" : ""}`}
+                  style={{
+                    top: "40%",
+                    left: "54%",
+                    background: "oklch(0.65 0.12 85)",
+                    boxShadow: "0 0 0 4px oklch(0.65 0.12 85 / 0.2)",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  title="Mithila – Madhubani"
+                />
+                {/* Bengal – right side, below Mithila */}
+                <button
+                  type="button"
+                  onClick={() => handleSelect("bengal")}
+                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "bengal" ? "scale-125" : ""}`}
+                  style={{
+                    top: "46%",
+                    left: "63%",
+                    background: "oklch(0.55 0.15 145)",
+                    boxShadow: "0 0 0 4px oklch(0.55 0.15 145 / 0.2)",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  title="Bengal – Kantha"
+                />
+                {/* Nilgiris – lower peninsula, Tamil Nadu hills */}
+                <button
+                  type="button"
+                  onClick={() => handleSelect("nilgiris")}
+                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "nilgiris" ? "scale-125" : ""}`}
+                  style={{
+                    top: "76%",
+                    left: "38%",
+                    background: "oklch(0.60 0.12 185)",
+                    boxShadow: "0 0 0 4px oklch(0.60 0.12 185 / 0.2)",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  title="Nilgiris – Toda Embroidery"
+                />
+                {/* Kerala – southern tip, left side of peninsula */}
+                <button
+                  type="button"
+                  onClick={() => handleSelect("kerala")}
+                  className={`absolute map-pulse rounded-full w-4 h-4 transition-transform hover:scale-125 ${selected === "kerala" ? "scale-125" : ""}`}
+                  style={{
+                    top: "84%",
+                    left: "33%",
+                    background: "oklch(0.62 0.14 165)",
+                    boxShadow: "0 0 0 4px oklch(0.62 0.14 165 / 0.2)",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  title="Kerala – Kasavu"
                 />
               </div>
             </div>
