@@ -191,10 +191,17 @@ export default function KitPage() {
 
               <button
                 type="button"
-                onClick={() => {
-                  window.location.href =
-                    "/checkout?type=kit&title=Heritage%20Starter%20Kit&price=249900";
-                }}
+                onClick={() =>
+                  navigate({
+                    to: "/checkout",
+                    search: {
+                      type: "kit",
+                      courseId: "",
+                      title: "Heritage Starter Kit",
+                      price: "249900",
+                    },
+                  })
+                }
                 className="w-full py-4 rounded-full text-sm font-medium text-white transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2 mb-3"
                 style={{ background: "oklch(0.65 0.12 85)" }}
               >

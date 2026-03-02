@@ -1,10 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronRight, ShoppingBag, Star } from "lucide-react";
-
-function goToCheckout(params: Record<string, string>) {
-  const qs = new URLSearchParams(params).toString();
-  window.location.href = `/checkout?${qs}`;
-}
 import { motion } from "motion/react";
 import type { Course } from "../backend.d";
 import { Footer } from "../components/Footer";
@@ -32,6 +27,7 @@ function formatPrice(price: bigint): string {
 }
 
 function CourseCard({ course, index }: { course: Course; index: number }) {
+  const navigate = useNavigate();
   const artImg = ART_IMAGES[course.artType] ?? ART_IMAGES["Toda Embroidery"];
   const avatar = MENTOR_AVATARS[index % 2];
 
@@ -114,11 +110,14 @@ function CourseCard({ course, index }: { course: Course; index: number }) {
             <button
               type="button"
               onClick={() =>
-                goToCheckout({
-                  type: "bundle",
-                  courseId: course.id.toString(),
-                  title: course.title,
-                  price: String(Number(course.price) + 249900),
+                navigate({
+                  to: "/checkout",
+                  search: {
+                    type: "bundle",
+                    courseId: course.id.toString(),
+                    title: course.title,
+                    price: String(Number(course.price) + 249900),
+                  },
                 })
               }
               className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95"
@@ -131,11 +130,14 @@ function CourseCard({ course, index }: { course: Course; index: number }) {
           <button
             type="button"
             onClick={() =>
-              goToCheckout({
-                type: "course",
-                courseId: course.id.toString(),
-                title: course.title,
-                price: String(Number(course.price)),
+              navigate({
+                to: "/checkout",
+                search: {
+                  type: "course",
+                  courseId: course.id.toString(),
+                  title: course.title,
+                  price: String(Number(course.price)),
+                },
               })
             }
             className="text-xs text-charcoal/50 hover:text-charcoal/70 underline underline-offset-2 transition-colors"

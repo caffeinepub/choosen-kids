@@ -1,5 +1,6 @@
-import { Award, ExternalLink, Palette, TrendingUp } from "lucide-react";
-import { motion } from "motion/react";
+import { Award, ExternalLink, Palette, TrendingUp, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { Footer } from "../components/Footer";
 import { useGetVerifiedArtworks } from "../hooks/useQueries";
 
@@ -55,12 +56,396 @@ const STATS = [
   { n: "340+", label: "Motifs licensed this season" },
 ];
 
+const BRAND_NAMES = [
+  "Louis Vuitton",
+  "Gucci",
+  "Chanel",
+  "Prada",
+  "Dior",
+  "Swat",
+  "Artisana",
+  "Celeste",
+  "Aurum",
+];
+
+interface LicenseForm {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
+interface SelectedArtwork {
+  title: string;
+  artist: string;
+  artType: string;
+}
+
 export default function PartnersPage() {
   const { data: artworks = [] } = useGetVerifiedArtworks();
   const displayArtworks = artworks.length > 0 ? artworks : null;
 
+  const [licenseOpen, setLicenseOpen] = useState(false);
+  const [partnershipOpen, setPartnershipOpen] = useState(false);
+  const [selectedArtwork, setSelectedArtwork] =
+    useState<SelectedArtwork | null>(null);
+  const [licenseForm, setLicenseForm] = useState<LicenseForm>({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  function handleLicenseOpen(artwork: SelectedArtwork) {
+    setSelectedArtwork(artwork);
+    setLicenseOpen(true);
+  }
+
+  function handleLicenseSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLicenseOpen(false);
+    setLicenseForm({
+      name: "",
+      company: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      {/* Marquee keyframes */}
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 22s linear infinite;
+          display: flex;
+          width: max-content;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      {/* ── License Enquiry Modal ── */}
+      <AnimatePresence>
+        {licenseOpen && (
+          <motion.div
+            key="license-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(0,0,0,0.45)" }}
+            onClick={() => setLicenseOpen(false)}
+          >
+            <motion.div
+              key="license-card"
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full"
+              style={{ maxWidth: 420, padding: "28px 32px" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close */}
+              <button
+                type="button"
+                onClick={() => setLicenseOpen(false)}
+                className="absolute top-4 right-4 text-charcoal/40 hover:text-charcoal transition-colors"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Header */}
+              <div className="mb-5">
+                <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">
+                  Licensing Enquiry
+                </p>
+                <h3 className="font-display text-xl font-semibold text-charcoal leading-snug">
+                  {selectedArtwork?.title ?? "License This Motif"}
+                </h3>
+                {selectedArtwork && (
+                  <p className="text-xs text-charcoal/45 mt-0.5">
+                    {selectedArtwork.artType} · {selectedArtwork.artist}
+                  </p>
+                )}
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleLicenseSubmit} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      htmlFor="lf-name"
+                      className="text-[10px] uppercase tracking-widest text-charcoal/50 mb-1 block"
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      id="lf-name"
+                      type="text"
+                      required
+                      value={licenseForm.name}
+                      onChange={(e) =>
+                        setLicenseForm((p) => ({ ...p, name: e.target.value }))
+                      }
+                      className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-teal transition-colors"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="lf-company"
+                      className="text-[10px] uppercase tracking-widest text-charcoal/50 mb-1 block"
+                    >
+                      Company / Brand
+                    </label>
+                    <input
+                      id="lf-company"
+                      type="text"
+                      required
+                      value={licenseForm.company}
+                      onChange={(e) =>
+                        setLicenseForm((p) => ({
+                          ...p,
+                          company: e.target.value,
+                        }))
+                      }
+                      className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-teal transition-colors"
+                      placeholder="Brand name"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label
+                      htmlFor="lf-email"
+                      className="text-[10px] uppercase tracking-widest text-charcoal/50 mb-1 block"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="lf-email"
+                      type="email"
+                      required
+                      value={licenseForm.email}
+                      onChange={(e) =>
+                        setLicenseForm((p) => ({ ...p, email: e.target.value }))
+                      }
+                      className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-teal transition-colors"
+                      placeholder="you@brand.com"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="lf-phone"
+                      className="text-[10px] uppercase tracking-widest text-charcoal/50 mb-1 block"
+                    >
+                      Phone
+                    </label>
+                    <input
+                      id="lf-phone"
+                      type="tel"
+                      value={licenseForm.phone}
+                      onChange={(e) =>
+                        setLicenseForm((p) => ({ ...p, phone: e.target.value }))
+                      }
+                      className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-teal transition-colors"
+                      placeholder="+91 XXXXX XXXXX"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="lf-message"
+                    className="text-[10px] uppercase tracking-widest text-charcoal/50 mb-1 block"
+                  >
+                    Licensing Intent
+                  </label>
+                  <textarea
+                    id="lf-message"
+                    rows={2}
+                    value={licenseForm.message}
+                    onChange={(e) =>
+                      setLicenseForm((p) => ({
+                        ...p,
+                        message: e.target.value,
+                      }))
+                    }
+                    className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-teal transition-colors resize-none"
+                    placeholder="Describe how you'd like to use this motif…"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                  style={{ background: "oklch(0.60 0.12 185)" }}
+                >
+                  Submit Enquiry
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Partnership Pitch Modal ── */}
+      <AnimatePresence>
+        {partnershipOpen && (
+          <motion.div
+            key="partnership-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(0,0,0,0.45)" }}
+            onClick={() => setPartnershipOpen(false)}
+          >
+            <motion.div
+              key="partnership-card"
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full"
+              style={{ maxWidth: 460, padding: "30px 32px" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close */}
+              <button
+                type="button"
+                onClick={() => setPartnershipOpen(false)}
+                className="absolute top-4 right-4 text-charcoal/40 hover:text-charcoal transition-colors"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Header */}
+              <div className="mb-6">
+                <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">
+                  Revenue Sharing
+                </p>
+                <h3 className="font-display text-2xl font-semibold text-charcoal">
+                  Partnership Revenue Model
+                </h3>
+                <p className="text-sm text-charcoal/50 mt-1.5">
+                  Every licensed motif revenue is split as:
+                </p>
+              </div>
+
+              {/* Revenue Split */}
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                {/* Choosen Kids */}
+                <div
+                  className="rounded-xl p-4 text-center"
+                  style={{ background: "oklch(0.97 0.01 260)" }}
+                >
+                  <p
+                    className="font-display text-3xl font-bold"
+                    style={{ color: "oklch(0.25 0.02 260)" }}
+                  >
+                    50%
+                  </p>
+                  <div
+                    className="h-1 rounded-full mt-2 mb-2 mx-auto w-10"
+                    style={{ background: "oklch(0.40 0.05 260)" }}
+                  />
+                  <p className="text-[10px] uppercase tracking-widest text-charcoal/60 leading-tight">
+                    Choosen Kids
+                  </p>
+                  <p className="text-[9px] text-charcoal/40 mt-0.5">Platform</p>
+                </div>
+
+                {/* Kids */}
+                <div
+                  className="rounded-xl p-4 text-center"
+                  style={{ background: "oklch(0.94 0.06 185)" }}
+                >
+                  <p
+                    className="font-display text-3xl font-bold"
+                    style={{ color: "oklch(0.38 0.14 185)" }}
+                  >
+                    25%
+                  </p>
+                  <div
+                    className="h-1 rounded-full mt-2 mb-2 mx-auto w-10"
+                    style={{ background: "oklch(0.55 0.15 185)" }}
+                  />
+                  <p className="text-[10px] uppercase tracking-widest text-charcoal/60 leading-tight">
+                    Kids
+                  </p>
+                  <p className="text-[9px] text-charcoal/40 mt-0.5">
+                    Student creators
+                  </p>
+                </div>
+
+                {/* NGOs */}
+                <div
+                  className="rounded-xl p-4 text-center"
+                  style={{ background: "oklch(0.96 0.04 60)" }}
+                >
+                  <p
+                    className="font-display text-3xl font-bold"
+                    style={{ color: "oklch(0.45 0.10 60)" }}
+                  >
+                    25%
+                  </p>
+                  <div
+                    className="h-1 rounded-full mt-2 mb-2 mx-auto w-10"
+                    style={{ background: "oklch(0.65 0.12 60)" }}
+                  />
+                  <p className="text-[10px] uppercase tracking-widest text-charcoal/60 leading-tight">
+                    NGO's
+                  </p>
+                  <p className="text-[9px] text-charcoal/40 mt-0.5">
+                    Community impact
+                  </p>
+                </div>
+              </div>
+
+              {/* Tie-up brands marquee */}
+              <div className="mb-6">
+                <p className="text-[10px] uppercase tracking-widest text-charcoal/40 mb-3 text-center">
+                  Tie-up Brands
+                </p>
+                <div className="overflow-hidden border border-gray-100 rounded-xl py-3 bg-gray-50">
+                  <div className="animate-marquee">
+                    {[...BRAND_NAMES, ...BRAND_NAMES].map((name, i) => (
+                      <span
+                        // biome-ignore lint/suspicious/noArrayIndexKey: marquee duplicate list requires index
+                        key={`${name}-${i}`}
+                        className="mx-6 text-xs font-semibold tracking-widest uppercase whitespace-nowrap"
+                        style={{ color: "oklch(0.35 0.02 260)" }}
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                type="button"
+                onClick={() => setPartnershipOpen(false)}
+                className="w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: "oklch(0.18 0.01 260)" }}
+              >
+                Become a Partner
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero */}
       <section className="relative py-24 px-6 overflow-hidden border-b border-gray-100">
         <div
@@ -97,6 +482,7 @@ export default function PartnersPage() {
             <div className="flex items-center justify-center gap-3 mt-8">
               <button
                 type="button"
+                onClick={() => setPartnershipOpen(true)}
                 className="px-8 py-3.5 rounded-full text-sm font-medium text-white transition-all hover:opacity-90"
                 style={{ background: "oklch(0.18 0.01 260)" }}
               >
@@ -215,6 +601,13 @@ export default function PartnersPage() {
                   <div className="flex gap-1.5 mt-1">
                     <button
                       type="button"
+                      onClick={() =>
+                        handleLicenseOpen({
+                          title: artwork.title,
+                          artist: artwork.artist,
+                          artType: artwork.artType,
+                        })
+                      }
                       className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border border-charcoal text-charcoal hover:bg-charcoal hover:text-white transition-all"
                     >
                       <ExternalLink size={10} />
@@ -317,53 +710,45 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* Brand Partners Logos Strip */}
-      <section className="py-16 px-6 border-t border-gray-100 bg-white">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-xs tracking-widest uppercase text-charcoal/35 mb-10">
+      {/* Brand Partners Logos Strip — scrolling marquee */}
+      <section className="py-16 px-6 border-t border-gray-100 bg-white overflow-hidden">
+        <div className="max-w-5xl mx-auto text-center mb-8">
+          <p className="text-xs tracking-widest uppercase text-charcoal/35">
             Trusted by the world's finest houses
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-10">
+        </div>
+        <div className="overflow-hidden">
+          <div className="animate-marquee">
             {[
-              {
-                src: "/assets/generated/brand-logo-lv-transparent.dim_300x80.png",
-                alt: "Louis Vuitton",
-              },
-              {
-                src: "/assets/generated/brand-logo-gucci-transparent.dim_300x80.png",
-                alt: "Gucci",
-              },
-              {
-                src: "/assets/generated/brand-logo-chanel-transparent.dim_300x80.png",
-                alt: "Chanel",
-              },
-              {
-                src: "/assets/generated/brand-logo-prada-transparent.dim_300x80.png",
-                alt: "Prada",
-              },
-              {
-                src: "/assets/generated/brand-logo-dior-transparent.dim_300x80.png",
-                alt: "Dior",
-              },
-              {
-                src: "/assets/generated/brand-logo-swat-transparent.dim_300x80.png",
-                alt: "Swat",
-              },
-            ].map((brand) => (
-              <motion.div
-                key={brand.alt}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="grayscale hover:grayscale-0 transition-all duration-300 opacity-50 hover:opacity-100"
+              "Louis Vuitton",
+              "Gucci",
+              "Chanel",
+              "Prada",
+              "Dior",
+              "Swat",
+              "Louis Vuitton",
+              "Gucci",
+              "Chanel",
+              "Prada",
+              "Dior",
+              "Swat",
+            ].map((brand, i) => (
+              <span
+                // biome-ignore lint/suspicious/noArrayIndexKey: marquee duplicate list requires index
+                key={`brand-${i}`}
+                className="mx-10 text-sm font-semibold tracking-widest uppercase whitespace-nowrap transition-colors cursor-default"
+                style={{ color: "oklch(0.50 0.03 260)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLSpanElement).style.color =
+                    "oklch(0.18 0.01 260)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLSpanElement).style.color =
+                    "oklch(0.50 0.03 260)";
+                }}
               >
-                <img
-                  src={brand.src}
-                  alt={brand.alt}
-                  className="h-8 object-contain"
-                />
-              </motion.div>
+                {brand}
+              </span>
             ))}
           </div>
         </div>

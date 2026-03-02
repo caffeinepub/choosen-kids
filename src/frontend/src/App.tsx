@@ -114,6 +114,12 @@ const checkoutRoute = createRoute({
   getParentRoute: () => protectedLayout,
   path: "/checkout",
   component: CheckoutPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    type: (search.type as string) ?? "bundle",
+    courseId: (search.courseId as string) ?? "",
+    title: (search.title as string) ?? "",
+    price: (search.price as string) ?? "0",
+  }),
 });
 
 const routeTree = rootRoute.addChildren([
