@@ -1,5 +1,10 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronRight, ShoppingBag, Star } from "lucide-react";
+
+function goToCheckout(params: Record<string, string>) {
+  const qs = new URLSearchParams(params).toString();
+  window.location.href = `/checkout?${qs}`;
+}
 import { motion } from "motion/react";
 import type { Course } from "../backend.d";
 import { Footer } from "../components/Footer";
@@ -11,6 +16,10 @@ const ART_IMAGES: Record<string, string> = {
   Warli: "/assets/generated/warli-art.dim_800x600.jpg",
   Mandala: "/assets/generated/mandala-art.dim_800x600.jpg",
   Kalamkari: "/assets/generated/kalamkari-art.dim_800x600.jpg",
+  "Kerala Mural": "/assets/generated/kerala-mural-painting.dim_800x600.jpg",
+  "Theyyam Craft": "/assets/generated/theyyam-mask-craft.dim_800x600.jpg",
+  "Metal Mirror Art": "/assets/generated/aranmula-kannadi.dim_800x600.jpg",
+  "Kalaripayattu Art": "/assets/generated/kalaripayattu-art.dim_800x600.jpg",
 };
 
 const MENTOR_AVATARS = [
@@ -23,7 +32,6 @@ function formatPrice(price: bigint): string {
 }
 
 function CourseCard({ course, index }: { course: Course; index: number }) {
-  const navigate = useNavigate();
   const artImg = ART_IMAGES[course.artType] ?? ART_IMAGES["Toda Embroidery"];
   const avatar = MENTOR_AVATARS[index % 2];
 
@@ -93,28 +101,46 @@ function CourseCard({ course, index }: { course: Course; index: number }) {
         </p>
 
         {/* Price + CTA */}
-        <div className="flex items-center justify-between mt-5">
-          <div>
-            <p className="text-2xl font-display font-semibold text-charcoal">
-              {formatPrice(course.price)}
-            </p>
-            <p className="text-xs text-charcoal/40 mt-0.5">
-              Course + Starter Kit
-            </p>
+        <div className="mt-5">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-2xl font-display font-semibold text-charcoal">
+                {formatPrice(course.price + 249900n)}
+              </p>
+              <p className="text-xs text-charcoal/40 mt-0.5">
+                Course + Starter Kit
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                goToCheckout({
+                  type: "bundle",
+                  courseId: course.id.toString(),
+                  title: course.title,
+                  price: String(Number(course.price) + 249900),
+                })
+              }
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95"
+              style={{ background: "oklch(0.65 0.12 85)" }}
+            >
+              <ShoppingBag size={14} />
+              Buy Course + Kit
+            </button>
           </div>
           <button
             type="button"
             onClick={() =>
-              navigate({
-                to: "/learn/$courseId",
-                params: { courseId: course.id.toString() },
+              goToCheckout({
+                type: "course",
+                courseId: course.id.toString(),
+                title: course.title,
+                price: String(Number(course.price)),
               })
             }
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white transition-all hover:opacity-90 active:scale-95"
-            style={{ background: "oklch(0.18 0.01 260)" }}
+            className="text-xs text-charcoal/50 hover:text-charcoal/70 underline underline-offset-2 transition-colors"
           >
-            <ShoppingBag size={14} />
-            Buy Course
+            Course only — {formatPrice(course.price)}
           </button>
         </div>
       </div>

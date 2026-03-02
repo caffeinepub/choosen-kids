@@ -65,6 +65,50 @@ export const MOCK_COURSES: Course[] = [
     mentorBio: "Fourth-generation Kalamkari artist from Srikalahasti.",
     price: 319900n,
   },
+  {
+    id: 6n,
+    title: "Kerala Mural Painting",
+    artType: "Kerala Mural",
+    region: "Kerala",
+    description:
+      "Master the ancient Chitra Kala temple mural tradition — sacred geometry, natural pigments, and divine iconography on plastered walls.",
+    mentorName: "Krishnan Nair",
+    mentorBio: "40 years of temple mural work in Thrissur, Kerala.",
+    price: 299900n,
+  },
+  {
+    id: 7n,
+    title: "Theyyam Mask & Costume Craft",
+    artType: "Theyyam Craft",
+    region: "Kerala",
+    description:
+      "Create sacred Theyyam masks and costumes worn in North Kerala's divine rituals — papier-mâché, natural dyes, and mirror-work.",
+    mentorName: "Rajan Perumal",
+    mentorBio: "Master Theyyam artist from Kannur, North Kerala.",
+    price: 349900n,
+  },
+  {
+    id: 8n,
+    title: "Aranmula Kannadi",
+    artType: "Metal Mirror Art",
+    region: "Kerala",
+    description:
+      "Hand-craft the legendary Aranmula metal mirror — an ancient alloy of copper and tin polished to perfection as a sacred temple offering.",
+    mentorName: "Devaki Varma",
+    mentorBio: "4th generation Aranmula mirror artisan, Pathanamthitta.",
+    price: 399900n,
+  },
+  {
+    id: 9n,
+    title: "Kalaripayattu Body Art",
+    artType: "Kalaripayattu Art",
+    region: "Kerala",
+    description:
+      "Learn ritualistic body painting and symbolic costume art from Kerala's ancient martial art — sacred geometry meets warrior tradition.",
+    mentorName: "Gopalan Nambiar",
+    mentorBio: "Chief Gurukkal of Thiruvananthapuram Kalari Centre.",
+    price: 249900n,
+  },
 ];
 
 const MOCK_PROGRESS: StudentProgress[] = [
