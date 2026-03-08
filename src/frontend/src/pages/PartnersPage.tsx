@@ -1,4 +1,4 @@
-import { Award, ExternalLink, Palette, TrendingUp, X } from "lucide-react";
+import { Award, Palette, TrendingUp, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Footer } from "../components/Footer";
@@ -559,61 +559,63 @@ export default function PartnersPage() {
             </div>
           </div>
 
-          {/* Gallery Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Gallery Grid — compact mini-cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {MOCK_ARTWORKS.map((artwork, i) => (
               <motion.div
                 key={artwork.id.toString()}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="group"
+                whileHover={{
+                  y: -4,
+                  boxShadow: "0 12px 28px rgba(0,0,0,0.10)",
+                }}
+                transition={{
+                  opacity: { duration: 0.5, delay: i * 0.08 },
+                  y: { type: "spring", stiffness: 300, damping: 22 },
+                  boxShadow: { type: "spring", stiffness: 300, damping: 22 },
+                }}
+                className="group bg-white rounded-xl overflow-hidden border border-gray-100 cursor-pointer"
+                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}
               >
-                {/* Gallery Frame */}
-                <div className="gallery-frame rounded-sm bg-white">
-                  <div className="relative overflow-hidden aspect-square">
-                    <img
-                      src={
-                        displayArtworks
-                          ? "/assets/generated/toda-embroidery.dim_800x600.jpg"
-                          : artwork.image
-                      }
-                      alt={artwork.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
+                {/* Square image */}
+                <div className="relative overflow-hidden aspect-square w-full">
+                  <img
+                    src={
+                      displayArtworks
+                        ? "/assets/generated/toda-embroidery.dim_800x600.jpg"
+                        : artwork.image
+                    }
+                    alt={artwork.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
-                {/* Artwork info */}
-                <div className="mt-4 flex items-start justify-between">
-                  <div>
-                    <p className="text-sm font-display font-semibold text-charcoal">
-                      {artwork.title}
-                    </p>
-                    <p className="text-xs text-charcoal/45 mt-0.5">
-                      {artwork.artist}
-                    </p>
-                    <p className="text-xs text-teal mt-0.5">
-                      {artwork.artType}
-                    </p>
-                  </div>
-                  <div className="flex gap-1.5 mt-1">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleLicenseOpen({
-                          title: artwork.title,
-                          artist: artwork.artist,
-                          artType: artwork.artType,
-                        })
-                      }
-                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border border-charcoal text-charcoal hover:bg-charcoal hover:text-white transition-all"
-                    >
-                      <ExternalLink size={10} />
-                      License
-                    </button>
-                  </div>
+                {/* Compact card info */}
+                <div className="p-3">
+                  <p className="text-xs font-semibold text-charcoal leading-snug line-clamp-1">
+                    {artwork.title}
+                  </p>
+                  <p className="text-[10px] text-charcoal/40 mt-0.5 line-clamp-1">
+                    {artwork.artist}
+                  </p>
+                  <p className="text-[10px] text-teal mt-0.5 mb-2">
+                    {artwork.artType}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleLicenseOpen({
+                        title: artwork.title,
+                        artist: artwork.artist,
+                        artType: artwork.artType,
+                      })
+                    }
+                    className="text-[10px] px-2.5 py-1 rounded-full border border-charcoal/30 text-charcoal/60 hover:bg-charcoal hover:text-white transition-all w-full"
+                  >
+                    License
+                  </button>
                 </div>
               </motion.div>
             ))}
