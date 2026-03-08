@@ -1,16 +1,37 @@
-import { Award, Palette, TrendingUp, X } from "lucide-react";
+import {
+  Award,
+  BookOpen,
+  Download,
+  Palette,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Footer } from "../components/Footer";
 import { useGetVerifiedArtworks } from "../hooks/useQueries";
 
+interface MockArtwork {
+  id: bigint;
+  title: string;
+  artist: string;
+  artType: string;
+  category: string;
+  region: string;
+  status: "Available" | "Licensed";
+  image: string;
+}
+
 // Mock artworks for display when backend returns empty
-const MOCK_ARTWORKS = [
+const MOCK_ARTWORKS: MockArtwork[] = [
   {
     id: 1n,
     title: "Sacred Triangle Sequence",
     artist: "Priya Nilgiris, Age 14",
     artType: "Toda Embroidery",
+    category: "Embroidery",
+    region: "Nilgiris",
+    status: "Available",
     image: "/assets/generated/toda-embroidery.dim_800x600.jpg",
   },
   {
@@ -18,6 +39,9 @@ const MOCK_ARTWORKS = [
     title: "Krishna Leela Panorama",
     artist: "Ananya Darbhanga, Age 16",
     artType: "Madhubani",
+    category: "Painting",
+    region: "Mithila",
+    status: "Licensed",
     image: "/assets/generated/madhubani-painting.dim_800x600.jpg",
   },
   {
@@ -25,6 +49,9 @@ const MOCK_ARTWORKS = [
     title: "Harvest Festival Warli",
     artist: "Ravi Maharashtra, Age 13",
     artType: "Warli",
+    category: "Painting",
+    region: "Maharashtra",
+    status: "Available",
     image: "/assets/generated/warli-art.dim_800x600.jpg",
   },
   {
@@ -32,6 +59,9 @@ const MOCK_ARTWORKS = [
     title: "Cosmic Mandala No. 7",
     artist: "Deepa Jaipur, Age 15",
     artType: "Mandala",
+    category: "Painting",
+    region: "Rajasthan",
+    status: "Available",
     image: "/assets/generated/mandala-art.dim_800x600.jpg",
   },
   {
@@ -39,6 +69,9 @@ const MOCK_ARTWORKS = [
     title: "Shiva's River — Kalamkari",
     artist: "Vikram Srikalahasti, Age 17",
     artType: "Kalamkari",
+    category: "Painting",
+    region: "Andhra",
+    status: "Licensed",
     image: "/assets/generated/kalamkari-art.dim_800x600.jpg",
   },
   {
@@ -46,7 +79,90 @@ const MOCK_ARTWORKS = [
     title: "Nilgiri Dawn Embroidery",
     artist: "Sita Ooty, Age 12",
     artType: "Toda Embroidery",
+    category: "Embroidery",
+    region: "Nilgiris",
+    status: "Available",
     image: "/assets/generated/toda-embroidery.dim_800x600.jpg",
+  },
+  {
+    id: 7n,
+    title: "Pichwai Krishna Leela",
+    artist: "Arjun Nathdwara, Age 15",
+    artType: "Pichwai Painting",
+    category: "Painting",
+    region: "Rajasthan",
+    status: "Available",
+    image: "/assets/generated/rajasthan-pichwai-painting.dim_800x600.jpg",
+  },
+  {
+    id: 8n,
+    title: "Jaipur Blue Floral Panel",
+    artist: "Zainab Jaipur, Age 13",
+    artType: "Blue Pottery",
+    category: "Craft",
+    region: "Rajasthan",
+    status: "Licensed",
+    image: "/assets/generated/rajasthan-blue-pottery.dim_800x600.jpg",
+  },
+  {
+    id: 9n,
+    title: "Pabuji Epic Scroll",
+    artist: "Vikram Bhilwara, Age 16",
+    artType: "Phad Painting",
+    category: "Painting",
+    region: "Rajasthan",
+    status: "Available",
+    image: "/assets/generated/rajasthan-phad-painting.dim_800x600.jpg",
+  },
+  {
+    id: 10n,
+    title: "Bandhani Sunrise Textile",
+    artist: "Priya Jodhpur, Age 14",
+    artType: "Bandhani",
+    category: "Textile",
+    region: "Rajasthan",
+    status: "Available",
+    image: "/assets/generated/rajasthan-bandhani-art.dim_800x600.jpg",
+  },
+  {
+    id: 11n,
+    title: "Mughal Court Miniature",
+    artist: "Rahul Udaipur, Age 17",
+    artType: "Miniature Painting",
+    category: "Painting",
+    region: "Rajasthan",
+    status: "Available",
+    image: "/assets/generated/rajasthan-miniature-painting.dim_800x600.jpg",
+  },
+  {
+    id: 12n,
+    title: "Meenakari Gold Medallion",
+    artist: "Sana Jaipur, Age 15",
+    artType: "Meenakari",
+    category: "Jewellery",
+    region: "Rajasthan",
+    status: "Licensed",
+    image: "/assets/generated/rajasthan-meenakari-art.dim_800x600.jpg",
+  },
+  {
+    id: 13n,
+    title: "Leheriya Wave Weave",
+    artist: "Deepika Udaipur, Age 13",
+    artType: "Leheriya",
+    category: "Textile",
+    region: "Rajasthan",
+    status: "Available",
+    image: "/assets/generated/rajasthan-leheriya-textile.dim_800x600.jpg",
+  },
+  {
+    id: 14n,
+    title: "Bengal Kantha Garden",
+    artist: "Meera Kolkata, Age 16",
+    artType: "Kantha Embroidery",
+    category: "Embroidery",
+    region: "Bengal",
+    status: "Available",
+    image: "/assets/generated/bengal-kantha-embroidery.dim_800x600.jpg",
   },
 ];
 
@@ -82,12 +198,21 @@ interface SelectedArtwork {
   artType: string;
 }
 
+const FILTER_OPTIONS = [
+  "All",
+  "Embroidery",
+  "Painting",
+  "Textile",
+  "Jewellery",
+  "Craft",
+];
+
 export default function PartnersPage() {
-  const { data: artworks = [] } = useGetVerifiedArtworks();
-  const displayArtworks = artworks.length > 0 ? artworks : null;
+  useGetVerifiedArtworks();
 
   const [licenseOpen, setLicenseOpen] = useState(false);
   const [partnershipOpen, setPartnershipOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
   const [selectedArtwork, setSelectedArtwork] =
     useState<SelectedArtwork | null>(null);
   const [licenseForm, setLicenseForm] = useState<LicenseForm>({
@@ -97,6 +222,11 @@ export default function PartnersPage() {
     phone: "",
     message: "",
   });
+
+  const filteredArtworks =
+    activeFilter === "All"
+      ? MOCK_ARTWORKS
+      : MOCK_ARTWORKS.filter((a) => a.category === activeFilter);
 
   function handleLicenseOpen(artwork: SelectedArtwork) {
     setSelectedArtwork(artwork);
@@ -490,6 +620,8 @@ export default function PartnersPage() {
               </button>
               <button
                 type="button"
+                data-ocid="catalogue.primary_button"
+                onClick={() => window.open("/catalogue", "_blank")}
                 className="px-8 py-3.5 rounded-full text-sm font-medium text-charcoal border border-gray-200 hover:border-charcoal transition-all"
               >
                 Download Catalogue
@@ -530,7 +662,7 @@ export default function PartnersPage() {
         style={{ background: "oklch(0.99 0.005 80)" }}
       >
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
             <div>
               <p className="text-xs tracking-widest uppercase text-charcoal/40 mb-3">
                 Gallery
@@ -539,16 +671,19 @@ export default function PartnersPage() {
                 Motif Library
               </h2>
               <p className="text-sm text-charcoal/50 mt-2">
-                {MOCK_ARTWORKS.length} verified artworks available for licensing
+                {filteredArtworks.length} of {MOCK_ARTWORKS.length} verified
+                artworks
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              {["All", "Embroidery", "Painting", "Weaving"].map((filter) => (
+            <div className="flex flex-wrap items-center gap-2">
+              {FILTER_OPTIONS.map((filter) => (
                 <button
                   key={filter}
                   type="button"
+                  data-ocid="motif.filter.tab"
+                  onClick={() => setActiveFilter(filter)}
                   className={`text-xs px-4 py-1.5 rounded-full border transition-all ${
-                    filter === "All"
+                    filter === activeFilter
                       ? "bg-charcoal text-white border-charcoal"
                       : "border-gray-200 text-charcoal/60 hover:border-charcoal/40"
                   }`}
@@ -561,7 +696,7 @@ export default function PartnersPage() {
 
           {/* Gallery Grid — compact mini-cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {MOCK_ARTWORKS.map((artwork, i) => (
+            {filteredArtworks.map((artwork, i) => (
               <motion.div
                 key={artwork.id.toString()}
                 initial={{ opacity: 0, y: 20 }}
@@ -569,27 +704,44 @@ export default function PartnersPage() {
                 viewport={{ once: true }}
                 whileHover={{
                   y: -4,
-                  boxShadow: "0 12px 28px rgba(0,0,0,0.10)",
+                  boxShadow: "0 16px 36px rgba(0,0,0,0.12)",
                 }}
                 transition={{
-                  opacity: { duration: 0.5, delay: i * 0.08 },
+                  opacity: { duration: 0.5, delay: i * 0.06 },
                   y: { type: "spring", stiffness: 300, damping: 22 },
                   boxShadow: { type: "spring", stiffness: 300, damping: 22 },
                 }}
                 className="group bg-white rounded-xl overflow-hidden border border-gray-100 cursor-pointer"
                 style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}
               >
-                {/* Square image */}
+                {/* Square image with badges */}
                 <div className="relative overflow-hidden aspect-square w-full">
                   <img
-                    src={
-                      displayArtworks
-                        ? "/assets/generated/toda-embroidery.dim_800x600.jpg"
-                        : artwork.image
-                    }
+                    src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
                   />
+                  {/* Art type badge — top left */}
+                  <div className="absolute top-1.5 left-1.5">
+                    <span
+                      className="text-[9px] px-2 py-0.5 rounded-full font-semibold text-white leading-none"
+                      style={{ background: "oklch(0.55 0.12 185 / 0.9)" }}
+                    >
+                      {artwork.artType}
+                    </span>
+                  </div>
+                  {/* Status chip — top right */}
+                  <div className="absolute top-1.5 right-1.5">
+                    <span
+                      className={`text-[9px] px-2 py-0.5 rounded-full font-semibold leading-none ${
+                        artwork.status === "Licensed"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-green-100 text-green-700"
+                      }`}
+                    >
+                      {artwork.status}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Compact card info */}
@@ -600,11 +752,12 @@ export default function PartnersPage() {
                   <p className="text-[10px] text-charcoal/40 mt-0.5 line-clamp-1">
                     {artwork.artist}
                   </p>
-                  <p className="text-[10px] text-teal mt-0.5 mb-2">
-                    {artwork.artType}
+                  <p className="text-[10px] text-charcoal/40 mt-0.5 mb-2">
+                    📍 {artwork.region}
                   </p>
                   <button
                     type="button"
+                    data-ocid="motif.open_modal_button"
                     onClick={() =>
                       handleLicenseOpen({
                         title: artwork.title,
@@ -612,7 +765,7 @@ export default function PartnersPage() {
                         artType: artwork.artType,
                       })
                     }
-                    className="text-[10px] px-2.5 py-1 rounded-full border border-charcoal/30 text-charcoal/60 hover:bg-charcoal hover:text-white transition-all w-full"
+                    className="text-[10px] px-2.5 py-1.5 rounded-lg border border-charcoal/20 text-charcoal/60 hover:bg-charcoal hover:text-white hover:border-charcoal transition-all w-full font-medium"
                   >
                     License
                   </button>
@@ -620,6 +773,166 @@ export default function PartnersPage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Download Catalogue Section */}
+      <section
+        className="py-16 px-6"
+        style={{ background: "oklch(0.98 0.01 70)" }}
+      >
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="rounded-3xl overflow-hidden border border-amber-100"
+            style={{ background: "oklch(0.97 0.01 60)" }}
+          >
+            <div className="grid md:grid-cols-2 gap-0">
+              {/* Left: Info */}
+              <div className="p-10 flex flex-col justify-center">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{
+                    background: "oklch(0.93 0.06 60)",
+                    color: "oklch(0.48 0.12 60)",
+                  }}
+                >
+                  <BookOpen size={22} />
+                </div>
+                <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-2">
+                  Official Publication
+                </p>
+                <h3 className="font-display text-2xl font-semibold text-charcoal leading-snug mb-2">
+                  Choosen Kids Catalogue 2026
+                </h3>
+                <p className="text-sm text-charcoal/55 leading-relaxed mb-6">
+                  Complete guide to our courses, artisan network, and brand
+                  licensing programme.
+                </p>
+                <ul className="space-y-2 mb-8">
+                  {[
+                    "Rajasthan Death-End Arts — 4 new courses",
+                    "Kerala Heritage Traditions",
+                    "Master Artisan Profiles",
+                    "Brand Licensing Guide & Revenue Model",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-2.5 text-sm text-charcoal/65"
+                    >
+                      <span
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        style={{ background: "oklch(0.65 0.12 60)" }}
+                      />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  data-ocid="catalogue.open_modal_button"
+                  onClick={() => window.open("/catalogue", "_blank")}
+                  className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95 w-fit"
+                  style={{ background: "oklch(0.48 0.12 60)" }}
+                >
+                  <Download size={15} />
+                  Open Catalogue
+                </button>
+              </div>
+
+              {/* Right: Catalogue cover mockup */}
+              <div
+                className="relative flex items-center justify-center p-10"
+                style={{ background: "oklch(0.94 0.03 60)" }}
+              >
+                {/* Book shadow */}
+                <div
+                  className="relative"
+                  style={{
+                    filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.18))",
+                  }}
+                >
+                  {/* Catalogue cover */}
+                  <div
+                    className="w-52 rounded-2xl overflow-hidden flex flex-col"
+                    style={{
+                      background: "oklch(0.18 0.01 260)",
+                      minHeight: 280,
+                    }}
+                  >
+                    {/* Cover header */}
+                    <div
+                      className="px-5 pt-6 pb-4"
+                      style={{
+                        borderBottom: "1px solid oklch(0.35 0.02 260)",
+                      }}
+                    >
+                      <p
+                        className="text-[8px] tracking-[0.25em] uppercase mb-2"
+                        style={{ color: "oklch(0.65 0.12 60)" }}
+                      >
+                        Official Catalogue
+                      </p>
+                      <p
+                        className="font-display text-sm font-semibold leading-snug"
+                        style={{ color: "oklch(0.95 0.01 80)" }}
+                      >
+                        Choosen Kids
+                      </p>
+                      <p
+                        className="text-[9px] mt-0.5"
+                        style={{ color: "oklch(0.65 0.12 60)" }}
+                      >
+                        Heritage Arts 2026
+                      </p>
+                    </div>
+                    {/* Seal */}
+                    <div className="flex-1 flex flex-col items-center justify-center p-4">
+                      <div
+                        className="w-24 h-24 rounded-full overflow-hidden border-2 mb-3"
+                        style={{ borderColor: "oklch(0.65 0.12 60)" }}
+                      >
+                        <img
+                          src="/assets/generated/choosen-kids-logo-seal-v2.dim_400x400.png"
+                          alt="Choosen Kids Seal"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p
+                        className="text-[8px] text-center tracking-widest uppercase"
+                        style={{ color: "oklch(0.55 0.04 260)" }}
+                      >
+                        Preserve · Create · Earn
+                      </p>
+                    </div>
+                    {/* Cover footer */}
+                    <div
+                      className="px-5 py-3"
+                      style={{ background: "oklch(0.65 0.12 60)" }}
+                    >
+                      <p className="text-[8px] font-semibold tracking-widest uppercase text-white">
+                        Brand Licensing Edition
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Edition badge */}
+                <div
+                  className="absolute top-6 right-6 rounded-full px-3 py-1.5 text-[9px] font-bold tracking-widest uppercase"
+                  style={{
+                    background: "oklch(0.65 0.12 60)",
+                    color: "white",
+                  }}
+                >
+                  2026
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 

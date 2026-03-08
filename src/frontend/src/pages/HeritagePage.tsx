@@ -249,6 +249,74 @@ function EthnicPattern({ pattern }: { pattern: string }) {
   );
 }
 
+// Map hotspot with floating label
+function MapHotspot({
+  id,
+  label,
+  artForm,
+  color,
+  top,
+  left,
+  labelSide,
+  selected,
+  onClick,
+}: {
+  id: string;
+  label: string;
+  artForm: string;
+  color: string;
+  top: string;
+  left: string;
+  labelSide: "left" | "right";
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      data-ocid={`heritage.${id}.map_marker`}
+      onClick={onClick}
+      className="absolute group"
+      style={{
+        top,
+        left,
+        transform: "translate(-50%, -50%)",
+        zIndex: 10,
+      }}
+      title={`${label} – ${artForm}`}
+    >
+      {/* Dot */}
+      <span
+        className={`block rounded-full transition-all duration-200 ${selected ? "w-6 h-6" : "w-4 h-4"} group-hover:w-6 group-hover:h-6`}
+        style={{
+          background: color,
+          boxShadow: `0 0 0 ${selected ? "6px" : "4px"} ${color.replace(")", " / 0.25)")}`,
+        }}
+      />
+      {/* Floating label */}
+      <span
+        className={`absolute pointer-events-none whitespace-nowrap px-2 py-0.5 rounded-full text-white font-semibold transition-opacity duration-200
+          ${labelSide === "right" ? "left-full ml-2 top-1/2 -translate-y-1/2" : "right-full mr-2 top-1/2 -translate-y-1/2"}
+          opacity-0 group-hover:opacity-100 ${selected ? "opacity-100" : ""}`}
+        style={{
+          background: color,
+          fontSize: "0.6rem",
+          letterSpacing: "0.04em",
+          boxShadow: `0 2px 8px ${color.replace(")", " / 0.4)")}`,
+        }}
+      >
+        {label}
+        <span
+          className="block font-normal"
+          style={{ fontSize: "0.55rem", opacity: 0.85 }}
+        >
+          {artForm}
+        </span>
+      </span>
+    </button>
+  );
+}
+
 interface DraggableRegionCardProps {
   region: (typeof REGIONS)[0];
   index: number;
@@ -523,89 +591,77 @@ export default function HeritagePage() {
               />
               {/* Overlay hotspots */}
               <div className="absolute inset-0">
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Kashmir — top center crown of India map, per hand-drawn reference */}
+                <MapHotspot
+                  id="kashmir"
+                  label="Kashmir"
+                  artForm="Pashmina"
+                  color="oklch(0.55 0.14 278)"
+                  top="13%"
+                  left="43%"
+                  labelSide="right"
+                  selected={selected === "kashmir"}
                   onClick={() => handleSelect("kashmir")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "kashmir" ? "scale-125" : ""}`}
-                  style={{
-                    top: "17%",
-                    left: "34%",
-                    background: "oklch(0.55 0.14 278)",
-                    boxShadow: "0 0 0 5px oklch(0.55 0.14 278 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Kashmir – Pashmina"
                 />
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Rajasthan — west/left middle, per hand-drawn reference */}
+                <MapHotspot
+                  id="rajasthan"
+                  label="Rajasthan"
+                  artForm="Block Print"
+                  color="oklch(0.62 0.17 48)"
+                  top="38%"
+                  left="26%"
+                  labelSide="left"
+                  selected={selected === "rajasthan"}
                   onClick={() => handleSelect("rajasthan")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "rajasthan" ? "scale-125" : ""}`}
-                  style={{
-                    top: "41%",
-                    left: "30%",
-                    background: "oklch(0.62 0.17 48)",
-                    boxShadow: "0 0 0 5px oklch(0.62 0.17 48 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Rajasthan – Block Print"
                 />
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Mithila/Bihar — upper center-right, per hand-drawn reference */}
+                <MapHotspot
+                  id="mithila"
+                  label="Mithila"
+                  artForm="Madhubani"
+                  color="oklch(0.65 0.15 75)"
+                  top="33%"
+                  left="55%"
+                  labelSide="right"
+                  selected={selected === "mithila"}
                   onClick={() => handleSelect("mithila")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "mithila" ? "scale-125" : ""}`}
-                  style={{
-                    top: "40%",
-                    left: "54%",
-                    background: "oklch(0.65 0.15 75)",
-                    boxShadow: "0 0 0 5px oklch(0.65 0.15 75 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Mithila – Madhubani"
                 />
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Bengal — east coast center-right slightly lower, per hand-drawn reference */}
+                <MapHotspot
+                  id="bengal"
+                  label="Bengal"
+                  artForm="Kantha"
+                  color="oklch(0.55 0.15 145)"
+                  top="46%"
+                  left="62%"
+                  labelSide="right"
+                  selected={selected === "bengal"}
                   onClick={() => handleSelect("bengal")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "bengal" ? "scale-125" : ""}`}
-                  style={{
-                    top: "46%",
-                    left: "63%",
-                    background: "oklch(0.55 0.15 145)",
-                    boxShadow: "0 0 0 5px oklch(0.55 0.15 145 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Bengal – Kantha"
                 />
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Nilgiris — Tamil Nadu hills, bottom-right of peninsula, per hand-drawn reference */}
+                <MapHotspot
+                  id="nilgiris"
+                  label="Nilgiris"
+                  artForm="Toda Emb."
+                  color="oklch(0.60 0.12 185)"
+                  top="82%"
+                  left="44%"
+                  labelSide="right"
+                  selected={selected === "nilgiris"}
                   onClick={() => handleSelect("nilgiris")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "nilgiris" ? "scale-125" : ""}`}
-                  style={{
-                    top: "76%",
-                    left: "38%",
-                    background: "oklch(0.60 0.12 185)",
-                    boxShadow: "0 0 0 5px oklch(0.60 0.12 185 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Nilgiris – Toda Embroidery"
                 />
-                <button
-                  type="button"
-                  data-ocid="heritage.map_marker"
+                {/* Kerala — southwest coast bottom-left, per hand-drawn reference */}
+                <MapHotspot
+                  id="kerala"
+                  label="Kerala"
+                  artForm="Kasavu"
+                  color="oklch(0.58 0.16 162)"
+                  top="82%"
+                  left="34%"
+                  labelSide="left"
+                  selected={selected === "kerala"}
                   onClick={() => handleSelect("kerala")}
-                  className={`absolute map-pulse rounded-full w-5 h-5 transition-transform hover:scale-125 ${selected === "kerala" ? "scale-125" : ""}`}
-                  style={{
-                    top: "84%",
-                    left: "33%",
-                    background: "oklch(0.58 0.16 162)",
-                    boxShadow: "0 0 0 5px oklch(0.58 0.16 162 / 0.25)",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  title="Kerala – Kasavu"
                 />
               </div>
             </div>

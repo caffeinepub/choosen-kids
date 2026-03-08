@@ -10,6 +10,7 @@ import {
 import { Navbar } from "./components/Navbar";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import AuctionPage from "./pages/AuctionPage";
+import CataloguePage from "./pages/CataloguePage";
 import CheckoutPage from "./pages/CheckoutPage";
 import DashboardPage from "./pages/DashboardPage";
 import HeritagePage from "./pages/HeritagePage";
@@ -122,9 +123,16 @@ const checkoutRoute = createRoute({
   }),
 });
 
+const catalogueRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/catalogue",
+  component: CataloguePage,
+});
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   heritageRoute,
+  catalogueRoute,
   protectedLayout.addChildren([
     homeRoute,
     dashboardRoute,

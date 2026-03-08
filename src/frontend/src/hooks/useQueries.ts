@@ -109,6 +109,50 @@ export const MOCK_COURSES: Course[] = [
     mentorBio: "Chief Gurukkal of Thiruvananthapuram Kalari Centre.",
     price: 249900n,
   },
+  {
+    id: 10n,
+    title: "Pichwai Painting of Rajasthan",
+    artType: "Pichwai Painting",
+    region: "Rajasthan",
+    description:
+      "Master the sacred devotional art of Pichwai – intricate paintings depicting Lord Krishna with lotus flowers and cows, using natural pigments on cloth.",
+    mentorName: "Shri Dinesh Soni",
+    mentorBio: "Nathdwara Pichwai master, 38 years",
+    price: 349900n,
+  },
+  {
+    id: 11n,
+    title: "Jaipur Blue Pottery Craft",
+    artType: "Blue Pottery",
+    region: "Rajasthan",
+    description:
+      "Learn the Persian-influenced Jaipur Blue Pottery technique – hand-painting intricate floral motifs on quartz-clay ceramics with cobalt and turquoise pigments.",
+    mentorName: "Ustaad Raza Khan",
+    mentorBio: "Jaipur Blue Pottery artisan, 25 years",
+    price: 299900n,
+  },
+  {
+    id: 12n,
+    title: "Phad Scroll Painting — Rajasthan",
+    artType: "Phad Painting",
+    region: "Rajasthan",
+    description:
+      "Discover the ancient Phad tradition – large horizontal scroll paintings narrating epic tales of Pabuji using earthy vegetable pigments on hand-spun cloth.",
+    mentorName: "Shri Prakash Joshi",
+    mentorBio: "Bhilwara Phad painter, 32 years",
+    price: 279900n,
+  },
+  {
+    id: 13n,
+    title: "Bandhani Tie-Dye Textile Art",
+    artType: "Bandhani",
+    region: "Rajasthan",
+    description:
+      "Learn the Rajasthani Bandhani technique – creating vibrant geometric dot patterns on silk and cotton using resist tie-dye with natural dyes.",
+    mentorName: "Farida Khatoon",
+    mentorBio: "Jodhpur Bandhani master, 28 years",
+    price: 249900n,
+  },
 ];
 
 const MOCK_PROGRESS: StudentProgress[] = [

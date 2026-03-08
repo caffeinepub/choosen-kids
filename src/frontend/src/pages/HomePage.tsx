@@ -16,6 +16,14 @@ const ART_IMAGES: Record<string, string> = {
   "Theyyam Craft": "/assets/generated/theyyam-mask-craft.dim_800x600.jpg",
   "Metal Mirror Art": "/assets/generated/aranmula-kannadi.dim_800x600.jpg",
   "Kalaripayattu Art": "/assets/generated/kalaripayattu-art.dim_800x600.jpg",
+  "Pichwai Painting":
+    "/assets/generated/rajasthan-pichwai-painting.dim_800x600.jpg",
+  "Blue Pottery": "/assets/generated/rajasthan-blue-pottery.dim_800x600.jpg",
+  "Phad Painting": "/assets/generated/rajasthan-phad-painting.dim_800x600.jpg",
+  Bandhani: "/assets/generated/rajasthan-bandhani-art.dim_800x600.jpg",
+  "Miniature Painting":
+    "/assets/generated/rajasthan-miniature-painting.dim_800x600.jpg",
+  Meenakari: "/assets/generated/rajasthan-meenakari-art.dim_800x600.jpg",
 };
 
 const MENTOR_AVATARS = [
@@ -1024,6 +1032,7 @@ function HeroLogoSeal() {
 export default function HomePage() {
   const navigate = useNavigate();
   const { data: courses = [] } = useGetAllCourses();
+  const displayCourses = courses.length > 0 ? courses : [];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -1193,7 +1202,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course, i) => (
+            {displayCourses.map((course, i) => (
               <CourseCard
                 key={course.id.toString()}
                 course={course}
