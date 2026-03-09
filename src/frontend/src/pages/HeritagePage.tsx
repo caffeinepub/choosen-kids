@@ -591,74 +591,74 @@ export default function HeritagePage() {
               />
               {/* Overlay hotspots */}
               <div className="absolute inset-0">
-                {/* Kashmir — top center crown of India map, per hand-drawn reference */}
+                {/* Kashmir — top-center teal region, crown of India */}
                 <MapHotspot
                   id="kashmir"
                   label="Kashmir"
                   artForm="Pashmina"
                   color="oklch(0.55 0.14 278)"
-                  top="13%"
-                  left="43%"
+                  top="17%"
+                  left="44%"
                   labelSide="right"
                   selected={selected === "kashmir"}
                   onClick={() => handleSelect("kashmir")}
                 />
-                {/* Rajasthan — west/left middle, per hand-drawn reference */}
+                {/* Rajasthan — large golden region, center-left */}
                 <MapHotspot
                   id="rajasthan"
                   label="Rajasthan"
                   artForm="Block Print"
                   color="oklch(0.62 0.17 48)"
-                  top="38%"
-                  left="26%"
+                  top="46%"
+                  left="31%"
                   labelSide="left"
                   selected={selected === "rajasthan"}
                   onClick={() => handleSelect("rajasthan")}
                 />
-                {/* Mithila/Bihar — upper center-right, per hand-drawn reference */}
+                {/* Mithila/Bihar — upper right area where "Bihar Mithila" label appears */}
                 <MapHotspot
                   id="mithila"
                   label="Mithila"
                   artForm="Madhubani"
                   color="oklch(0.65 0.15 75)"
-                  top="33%"
-                  left="55%"
+                  top="37%"
+                  left="61%"
                   labelSide="right"
                   selected={selected === "mithila"}
                   onClick={() => handleSelect("mithila")}
                 />
-                {/* Bengal — east coast center-right slightly lower, per hand-drawn reference */}
+                {/* Bengal — center-right where "West Bengal" label appears */}
                 <MapHotspot
                   id="bengal"
                   label="Bengal"
                   artForm="Kantha"
                   color="oklch(0.55 0.15 145)"
-                  top="46%"
-                  left="62%"
+                  top="50%"
+                  left="64%"
                   labelSide="right"
                   selected={selected === "bengal"}
                   onClick={() => handleSelect("bengal")}
                 />
-                {/* Nilgiris — Tamil Nadu hills, bottom-right of peninsula, per hand-drawn reference */}
+                {/* Nilgiris — bottom-right of peninsula, Tamil Nadu area */}
                 <MapHotspot
                   id="nilgiris"
                   label="Nilgiris"
                   artForm="Toda Emb."
                   color="oklch(0.60 0.12 185)"
-                  top="82%"
-                  left="44%"
+                  top="84%"
+                  left="54%"
                   labelSide="right"
                   selected={selected === "nilgiris"}
                   onClick={() => handleSelect("nilgiris")}
                 />
-                {/* Kerala — southwest coast bottom-left, per hand-drawn reference */}
+                {/* Kerala — bottom-left tip of peninsula where "Keral" label appears */}
                 <MapHotspot
                   id="kerala"
                   label="Kerala"
                   artForm="Kasavu"
                   color="oklch(0.58 0.16 162)"
-                  top="82%"
-                  left="34%"
+                  top="84%"
+                  left="36%"
                   labelSide="left"
                   selected={selected === "kerala"}
                   onClick={() => handleSelect("kerala")}

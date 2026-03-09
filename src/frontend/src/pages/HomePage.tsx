@@ -823,90 +823,173 @@ function HeroLogoSeal() {
       className="hidden lg:flex flex-col items-center flex-shrink-0"
       style={{ width: 360 }}
     >
-      {/* Red Thumbtack Pin */}
-      <div
-        className="flex flex-col items-center"
-        style={{ marginBottom: -6, zIndex: 20, position: "relative" }}
+      {/* Safety Pin SVG */}
+      <motion.div
+        animate={{ rotate: [-2, 2, -2] }}
+        transition={{
+          repeat: Number.POSITIVE_INFINITY,
+          duration: 4.5,
+          ease: "easeInOut",
+        }}
+        style={{
+          marginBottom: -10,
+          zIndex: 20,
+          position: "relative",
+          transformOrigin: "center bottom",
+          filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.18))",
+        }}
       >
-        {/* Red ball head */}
-        <motion.div
-          animate={{ rotate: [-4, 4, -4] }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 3.5,
-            ease: "easeInOut",
-          }}
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle at 35% 30%, #ff6b6b, #dc2626 50%, #991b1b)",
-            boxShadow:
-              "0 4px 12px rgba(220,38,38,0.5), 0 2px 4px rgba(0,0,0,0.25), inset 0 -2px 4px rgba(0,0,0,0.2)",
-            position: "relative",
-            zIndex: 10,
-          }}
+        {/*
+          Safety pin drawn diagonally (≈ -38°).
+          Coordinate origin: coil at bottom-left, clasp at top-right.
+          The SVG viewBox is 180×90 with the pin running from
+          (20, 72) [coil centre] to (160, 18) [clasp].
+        */}
+        <svg
+          width="180"
+          height="90"
+          viewBox="0 0 180 90"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
-          {/* Glossy highlight on ball */}
-          <div
-            style={{
-              position: "absolute",
-              top: 5,
-              left: 7,
-              width: 10,
-              height: 7,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.55)",
-              transform: "rotate(-20deg)",
-            }}
-          />
-          {/* Secondary small highlight */}
-          <div
-            style={{
-              position: "absolute",
-              top: 14,
-              left: 18,
-              width: 4,
-              height: 3,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.25)",
-            }}
-          />
-        </motion.div>
+          <defs>
+            {/* Metallic silver linear gradient along the pin */}
+            <linearGradient
+              id="pinGrad"
+              x1="20"
+              y1="72"
+              x2="160"
+              y2="18"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor="#c8c8c8" />
+              <stop offset="30%" stopColor="#e8e8e8" />
+              <stop offset="55%" stopColor="#f0f0f0" />
+              <stop offset="80%" stopColor="#d0d0d0" />
+              <stop offset="100%" stopColor="#b0b0b0" />
+            </linearGradient>
+            <linearGradient
+              id="coilGrad"
+              x1="8"
+              y1="60"
+              x2="36"
+              y2="84"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor="#e0e0e0" />
+              <stop offset="50%" stopColor="#a0a0a0" />
+              <stop offset="100%" stopColor="#c8c8c8" />
+            </linearGradient>
+            <linearGradient
+              id="claspGrad"
+              x1="148"
+              y1="12"
+              x2="172"
+              y2="28"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor="#e8e8e8" />
+              <stop offset="50%" stopColor="#9a9a9a" />
+              <stop offset="100%" stopColor="#d0d0d0" />
+            </linearGradient>
+          </defs>
 
-        {/* Metallic pin needle/point */}
-        <motion.div
-          animate={{ scaleY: [1, 1.02, 1] }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 3.5,
-            ease: "easeInOut",
-          }}
-          style={{
-            width: 0,
-            height: 0,
-            borderLeft: "5px solid transparent",
-            borderRight: "5px solid transparent",
-            borderTop: "22px solid #9ca3af",
-            filter: "drop-shadow(1px 2px 2px rgba(0,0,0,0.2))",
-            position: "relative",
-          }}
-        >
-          {/* Metallic needle body above triangle tip */}
-          <div
-            style={{
-              position: "absolute",
-              top: -28,
-              left: -3,
-              width: 6,
-              height: 10,
-              background: "linear-gradient(90deg, #e5e7eb, #9ca3af, #d1d5db)",
-              borderRadius: "1px",
-            }}
+          {/* ── Outer guard / frame bar (runs parallel & slightly offset from needle) ── */}
+          {/* Slight curve modelled with a cubic bezier */}
+          <path
+            d="M 26 66 C 60 52, 110 36, 154 20"
+            stroke="#b8b8b8"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.7"
           />
-        </motion.div>
-      </div>
+
+          {/* ── Main needle bar ── */}
+          <line
+            x1="22"
+            y1="72"
+            x2="158"
+            y2="19"
+            stroke="url(#pinGrad)"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+          />
+
+          {/* Highlight gleam on needle */}
+          <line
+            x1="50"
+            y1="62"
+            x2="130"
+            y2="32"
+            stroke="white"
+            strokeWidth="1"
+            strokeLinecap="round"
+            opacity="0.55"
+          />
+
+          {/* ── Coiled spring at bottom-left end ── */}
+          {/* Outermost ring */}
+          <circle
+            cx="20"
+            cy="72"
+            r="13"
+            stroke="url(#coilGrad)"
+            strokeWidth="2.2"
+            fill="none"
+          />
+          {/* Middle ring */}
+          <circle
+            cx="20"
+            cy="72"
+            r="9"
+            stroke="#b0b0b0"
+            strokeWidth="2"
+            fill="none"
+          />
+          {/* Inner ring */}
+          <circle
+            cx="20"
+            cy="72"
+            r="5.5"
+            stroke="#c8c8c8"
+            strokeWidth="1.8"
+            fill="none"
+          />
+          {/* Centre dot */}
+          <circle cx="20" cy="72" r="2.2" fill="#a8a8a8" />
+          {/* Tiny gleam on coil */}
+          <circle cx="15" cy="67" r="1.5" fill="white" opacity="0.5" />
+
+          {/* ── Clasp / shield at top-right end ── */}
+          {/* Shield body */}
+          <path
+            d="M 155 14 L 168 18 L 166 28 Q 160 33 154 28 L 152 18 Z"
+            stroke="url(#claspGrad)"
+            strokeWidth="1.8"
+            fill="oklch(0.93 0.01 0)"
+            opacity="0.95"
+          />
+          {/* Needle tip entering clasp */}
+          <circle
+            cx="157"
+            cy="19"
+            r="2.8"
+            fill="#c8c8c8"
+            stroke="#909090"
+            strokeWidth="1"
+          />
+          {/* Clasp highlight */}
+          <path
+            d="M 156 15 L 164 18"
+            stroke="white"
+            strokeWidth="1"
+            strokeLinecap="round"
+            opacity="0.55"
+          />
+        </svg>
+      </motion.div>
 
       {/* Seal container with swing animation */}
       <motion.div
